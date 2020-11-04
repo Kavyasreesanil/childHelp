@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Image Location</title>
+</head>
+<body>
+<img src="maam.jpg" id="the-img" style="max-width: 200px;"><br>
+<p id="pic-info"></p>
+<p id="map-link"><a id="map" style="visibility: hidden;">Click for Map</a></p>
+
+
+    <script type="text/javascript" src="exif.js"></script>
+    <script>
+
+        document.getElementById("the-img").onclick = function() {
+
+            EXIF.getData(this, function() {
+
+                myData = this;
+
+                console.log(myData.exifdata);
+
+                // document.getElementById('pic-info').innerHTML = 'This photo was taken on ' + myData.exifdata.DateTime + ' with a ' + myData.exifdata.Make + ' ' + myData.exifdata.Model;
+                
+                // Calculate latitude decimal
+                var latDegree = parseFloat(myData.exifdata.GPSLatitude[0]);
+                var latMinute = parseFloat(myData.exifdata.GPSLatitude[1]);
+                var latSecond = parseFloat(myData.exifdata.GPSLatitude[2]);
+               
+                var latDirection = myData.exifdata.GPSLatitudeRef;
+                
+                //var latFinal = ConvertDMSToDD(latDegree, latMinute, latSecond, latDirection);
+		var latFinal=add_symbl(latDegree,latMinute,latSecond,latDirection); 
+                console.log(latFinal);
+		
+
+                // Calculate longitude decimal
+                var lonDegree =parseFloat( myData.exifdata.GPSLongitude[0]);
+                var lonMinute = parseFloat(myData.exifdata.GPSLongitude[1]);
+                var lonSecond = parseFloat(myData.exifdata.GPSLongitude[2]);
+                var lonDirection = myData.exifdata.GPSLongitudeRef;
+
+               var lonFinal = add_symbl(lonDegree, lonMinute, lonSecond, lonDirection);
+                console.log(lonFinal);
+                var Map_Link="http://www.google.com/maps/place/"+latFinal+"%20"+lonFinal;
+                document.getElementById("map").style.visibility="visible";
+
+                document.getElementById("map").setAttribute("href",Map_Link);
+
+            });
+        }
+
+	
+	function add_symbl(degrees, minutes, seconds, direction){
+	var loc=parseFloat(degrees)+"°"+parseFloat(minutes)+"\'"+parseFloat(seconds)+"\""+direction;
+
+	return loc;
+	}
+
+
+    </script>
+</body>
+</html>
